@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love ❤️</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .love-container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            box-sizing: border-box;
+        }
+
+        .love-box {
+            /* No specific styles needed here as love-container handles most of it */
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #e91e63;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .buttons-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            /* No need for relative positioning here, No button will be fixed to viewport */
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #024e15 0%, #056c18 100%);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #c02912 0%, #af310a 100%);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            background: linear-gradient(45deg, #106505 0%, hsl(122, 92%, 20%) 100%);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        /* No button specific styling for when it's fleeing - controlled by JS for 'fixed' */
+
+        /* Style for disabled button */
+        button[disabled] {
+            cursor: not-allowed;
+            opacity: 0.6;
+            filter: grayscale(50%);
+            box-shadow: none;
+            transform: none;
+            pointer-events: none;
+            /* Prevent any pointer events when disabled */
+        }
+
+        .love-message {
+            font-family: 'Poppins', sans-serif;
+            color: #47025d;
+            margin-top: 40px;
+            font-size: 1.8em;
+            font-weight: 600;
+            min-height: 1.8em;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Overhead comic message for No button */
+        .comic-message {
+            position: fixed;
+            /* Fixed to viewport */
+            top: 50%;
+            /* Start roughly centered */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Adjust to true center */
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #d35400;
+            /* Orange/brown for comic effect */
+            z-index: 100;
+            /* On top of everything */
+            animation: popAndFade 2s forwards;
+            /* Animation for appearance and disappearance */
+            pointer-events: none;
+            /* Allows clicks/hovers on elements behind it */
+            white-space: nowrap;
+            /* Keep message on one line */
+            border: 2px solid #e67e22;
+            /* Comic border */
+        }
+
+        @keyframes popAndFade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+        }
+
+        /* Background floating hearts */
+        .hearts-container-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .heart-bg {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 105, 180, 0.7);
+            transform: rotate(-45deg);
+            animation: floatHeart 10s infinite ease-in;
+            opacity: 0;
+        }
+
+        .heart-bg::before,
+        .heart-bg::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+
+        .heart-bg::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart-bg::after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(-45deg) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) rotate(-45deg) scale(0.5);
+            }
+
+            100% {
+                transform: translateY(-50vh) rotate(-45deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Heart explosion on Yes click */
+        .heart-explosion-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: #ff6b6b;
+            font-size: 24px;
+            animation: heartParticleAnimation 1.5s ease-out forwards;
+        }
+
+        @keyframes heartParticleAnimation {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="love-container">
+        <div class="love-box">
+            <h1>Do You Love Ashraf cutie ? <span class="pulse">❤️</span></h1>
+
+            <div class="buttons-wrapper">
+                <button id="yesBtn" class="btn-yes">
+                    <span>Yes! ❤️</span>
+                </button>
+                <button id="noBtn" class="btn-no">No 😢</button>
+            </div>
+
+            <div id="message" class="love-message"></div>
+        </div>
+
+        <div id="heartsBackgroundContainer" class="hearts-container-bg"></div>
+        <div id="heartExplosionEffectContainer" class="heart-explosion-effect"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const messageDiv = document.getElementById('message');
+            const heartsBackgroundContainer = document.getElementById('heartsBackgroundContainer');
+            const heartExplosionEffectContainer = document.getElementById('heartExplosionEffectContainer');
+
+            let noButtonClicks = 0; // Track how many times No button has been clicked
+            const maxNoButtonClicks = 1; // Only allow one successful click
+
+            const yesMessages = [
+                "Yay! I knew it! ❤️",
+                "i really like you ! 😊",
+                "That's the best answer ever! 🥰",
+                "You make me so happy! 😄",
+                "I love you too! 😘"
+            ];
+
+            const noMessages = [
+                "Aww, try again! 😉",
+                "Are you sure? Just one more try! 🥺",
+                "My heart just broke a little... 💔 (Just kidding, try again!)",
+                "Don't play with my feelings! 😂 Try clicking 'Yes'!",
+                "Hmm, I think you misclicked! Try again! 🤔"
+            ];
+
+            const noHoverMessages = [
+                "Haha! Missed me!",
+                "don't break my heart! 😉",
+                "Can't catch me!",
+                "ow shit ! 💨",
+                "no no no ! ",
+                "Nope!",
+                "You'll never catch me, s-s-sucker!",
+                "please !, almost!",
+                "Not today, human!"
+            ];
+
+            // Yes button click handler
+            yesBtn.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * yesMessages.length);
+                messageDiv.textContent = yesMessages[randomIndex];
+                messageDiv.style.color = '#e91e63';
+
+                createHeartExplosionEffect();
+                // If Yes is clicked, disable No button permanently
+                noBtn.disabled = true;
+                noBtn.style.position = 'static'; // Reset its visual position if it moved
+                noBtn.style.left = 'auto';
+                noBtn.style.top = 'auto';
+                noBtn.style.transition = 'none';
+            });
+
+            // No button "flee" behavior on mouseenter (always flees until disabled)
+            noBtn.addEventListener('mouseenter', () => {
+                if (!noBtn.disabled) { // Only flee if not disabled
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+                    const btnRect = noBtn.getBoundingClientRect();
+
+                    // Calculate random positions across the entire viewport
+                    // Ensure the button stays fully within the viewport
+                    const randomX = Math.random() * (viewportWidth - btnRect.width);
+                    const randomY = Math.random() * (viewportHeight - btnRect.height);
+
+                    // Set position to fixed relative to the viewport
+                    noBtn.style.position = 'fixed';
+                    noBtn.style.left = `${randomX}px`;
+                    noBtn.style.top = `${randomY}px`;
+                    noBtn.style.transition = 'all 0.2s ease-out'; // Slightly slower for comic effect
+
+                    // Show a comic message
+                    showComicMessage();
+                }
+            });
+
+            // No button click handler (disables the button after first successful click)
+            noBtn.addEventListener('click', () => {
+                if (!noBtn.disabled) { // Ensure it's not already disabled
+                    noButtonClicks++; // Increment click count
+
+                    if (noButtonClicks >= maxNoButtonClicks) {
+                        const randomIndex = Math.floor(Math.random() * noMessages.length);
+                        messageDiv.textContent = noMessages[randomIndex];
+                        messageDiv.style.color = '#8e44ad';
+                        noBtn.disabled = true; // Disable the button
+                        noBtn.style.position = 'static'; // Reset its position for disabled state
+                        noBtn.style.left = 'auto';
+                        noBtn.style.top = 'auto';
+                        noBtn.style.transition = 'none';
+                    } else {
+                        // If more clicks are allowed but not maxed out, it still flees.
+                        // (This branch is effectively not hit with maxNoButtonClicks = 1)
+                    }
+                }
+            });
+
+            // Function to show a comic message
+            function showComicMessage() {
+                const message = document.createElement('div');
+                message.classList.add('comic-message');
+                const randomIndex = Math.floor(Math.random() * noHoverMessages.length);
+                message.textContent = noHoverMessages[randomIndex];
+                document.body.appendChild(message);
+
+                // Position the message near the cursor (or randomly near the fleeing button)
+                // For simplicity, we'll just center it for now,
+                // but you could get cursor coordinates here for more precise placement.
+                // Or position it near the *old* position of the button.
+
+                // Remove the message after its animation completes
+                message.addEventListener('animationend', () => {
+                    message.remove();
+                });
+            }
+
+            // --- Background Floating Hearts ---
+            function createBackgroundHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-bg');
+                heartsBackgroundContainer.appendChild(heart);
+
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+
+            setInterval(createBackgroundHeart, 300);
+
+            // --- Heart Explosion Effect on Yes Click ---
+            function createHeartExplosionEffect() {
+                heartExplosionEffectContainer.innerHTML = '';
+
+                const explosionHeartPositions = [
+                    { x: 0, y: -20, size: 1.5 }, { x: 15, y: -15, size: 1.3 }, { x: -15, y: -15, size: 1.3 },
+                    { x: 20, y: 0, size: 1.2 }, { x: -20, y: 0, size: 1.2 },
+                    { x: 15, y: 15, size: 1.1 }, { x: -15, y: 15, size: 1.1 }, { x: 0, y: 20, size: 1 },
+                    { x: 30, y: -40, size: 1.0 }, { x: -30, y: -40, size: 1.0 },
+                    { x: 45, y: -20, size: 0.9 }, { x: -45, y: -20, size: 0.9 },
+                    { x: 50, y: 10, size: 0.8 }, { x: -50, y: 10, size: 0.8 },
+                    { x: 40, y: 40, size: 0.7 }, { x: -40, y: 40, size: 0.7 },
+                    { x: 10, y: 55, size: 0.6 }, { x: -10, y: 55, size: 0.6 },
+                    { x: 60, y: -60, size: 0.5 }, { x: -60, y: -60, size: 0.5 },
+                    { x: 70, y: -30, size: 0.4 }, { x: -70, y: -30, size: 0.4 },
+                    { x: 75, y: 0, size: 0.3 }, { x: -75, y: 0, size: 0.3 },
+                    { x: 60, y: 60, size: 0.2 }, { x: -60, y: 60, size: 0.2 },
+                ];
+
+                explosionHeartPositions.forEach(pos => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = '50%';
+                    heart.style.top = '50%';
+                    heart.style.setProperty('--tx', `${pos.x + (Math.random() - 0.5) * 20}px`);
+                    heart.style.setProperty('--ty', `${pos.y + (Math.random() - 0.5) * 20}px`);
+                    heart.style.fontSize = `${pos.size ? pos.size * 24 : 24}px`;
+
+                    heartExplosionEffectContainer.appendChild(heart);
+                });
+
+                setTimeout(() => {
+                    heartExplosionEffectContainer.innerHTML = '';
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+
+</html>
